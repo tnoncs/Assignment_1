@@ -47,9 +47,9 @@ Load the three data sets, after downloading them from dropbox and saving them in
 * Word data: https://www.dropbox.com/s/8ng1civpl2aux58/token_train.csv?dl=0
 
 ```{r}
-data1=read.csv("demo_train(1).csv")
-data2=read.csv("LU_train.csv")
-data3=read.csv("token_train.csv")
+demo=read.csv("demo_train(1).csv")
+LU=read.csv("LU_train.csv")
+token=read.csv("token_train.csv")
 
 ```
 
@@ -70,7 +70,7 @@ Tip: Look into the package data.table, or google "how to rename variables in R"
 #install.packages("data.table")
 ??data.table
 library(plyr)
-data1=rename(data1, c("Child.ID"="SUBJ", "Visit"="VISIT"))
+demo=rename(demo, c("Child.ID"="SUBJ", "Visit"="VISIT"))
 ```
 
 2b. Find a way to homogeneize the way "visit" is reported. If you look into the original data sets, you will see that in the LU data and the Token data, Visits are called "visit 1" in stead of just 1 (which is the case in the demographic data set).
@@ -79,7 +79,9 @@ Tip: There is a package called stringr, which will be very handy for you also in
 ```{r}
 #install.packages("stringr")
 library(stringr)
-??str_extract()
+?str_extract()
+LU$VISIT=str_extract(LU$VISIT, "\\d")
+token$VISIT=str_extract(token$VISIT, "\\d")
 ```
 
 2c. We also need to make a small adjustment to the content of the Child.ID coloumn in the demographic data. Within this column, names that are not abbreviations do not end with "." (i.e. Adam), which is the case in the other two data sets (i.e. Adam.). If The content of the two variables isn't identical the data sets will not be merged sufficiently.
@@ -94,7 +96,8 @@ Tip: You will have to do identical work for both data sets, so to save time on t
 
 
 ```{r}
-
+?apply()
+?gsub
 ```
 
 2d. Now that the nitty gritty details of the different data sets are fixed, we want to make a subset of each data set only containig the variables that we wish to use in the final data set.
